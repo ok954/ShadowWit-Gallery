@@ -85,6 +85,7 @@ import {
   SPACE_TYPE_OPTIONS,
 } from '../../constants/space.ts'
 import { formatSize } from '../../utils'
+import { useTeamSpaceStore } from '@/stores/useTeamSpaceStore.ts'
 
 const columns = [
   {
@@ -183,6 +184,8 @@ const doSearch = () => {
   fetchData()
 }
 
+const teamSpaceStore = useTeamSpaceStore()
+
 // 删除数据
 const doDelete = async (id: string) => {
   if (!id) {
@@ -192,7 +195,8 @@ const doDelete = async (id: string) => {
   if (res.data.code === 0) {
     message.success('删除成功')
     // 刷新数据
-    fetchData()
+    await fetchData()
+    await teamSpaceStore.fetchTeamSpaceList()
   } else {
     message.error('删除失败')
   }

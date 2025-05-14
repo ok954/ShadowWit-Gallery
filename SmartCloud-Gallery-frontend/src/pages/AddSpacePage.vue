@@ -48,6 +48,7 @@ import {
   SPACE_TYPE_MAP,
 } from '@/constants/space.ts'
 import { formatSize } from '@/utils'
+import { useTeamSpaceStore } from '@/stores/useTeamSpaceStore.ts'
 
 const space = ref<API.SpaceVO>()
 const spaceForm = reactive<API.SpaceAddRequest | API.SpaceEditRequest>({})
@@ -81,6 +82,7 @@ onMounted(() => {
 
 const router = useRouter()
 
+const teamSpaceStore = useTeamSpaceStore()
 /**
  * 提交表单
  * @param values
@@ -105,13 +107,14 @@ const handleSubmit = async (values: any) => {
   // 操作成功
   if (res.data.code === 0 && res.data.data) {
     message.success('操作成功')
-    // 这里怎么强制刷新网页
-    // window.location.reload()
-    localStorage.setItem('spaceId', JSON.stringify(res.data.data))
+    teamSpaceStore.setTeamSpaceList(res.data.data)
+    // localStorage.setItem('spaceId', res.data.data)
     // 跳转到空间详情页
     router.push({
       path: `/space/${res.data.data}`,
     })
+    // 这里怎么强制刷新网页
+    // window.location.reload()
   } else {
     message.error('操作失败，' + res.data.message)
   }
