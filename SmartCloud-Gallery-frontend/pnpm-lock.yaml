@@ -47,6 +47,9 @@ importers:
       vue-router:
         specifier: ^4.4.5
         version: 4.5.1(vue@3.5.13(typescript@5.6.3))
+      vue-waterfall-plugin-next:
+        specifier: ^2.6.5
+        version: 2.6.5
       vue3-colorpicker:
         specifier: ^2.3.0
         version: 2.3.0(@aesoper/normal-utils@0.1.5)(@popperjs/core@2.11.8)(@vueuse/core@10.11.1(vue@3.5.13(typescript@5.6.3)))(gradient-parser@1.1.1)(lodash-es@4.17.21)(tinycolor2@1.6.0)(vue-types@3.0.2(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
@@ -2417,6 +2420,9 @@ packages:
     engines: {node: '>=10.15.0'}
     peerDependencies:
       vue: ^3.0.0
+
+  vue-waterfall-plugin-next@2.6.5:
+    resolution: {integrity: sha512-8ACGbdjoyKLiJfnKXB8h8f9eE14lhyzfI1N1nrfVAIRczSpNY1KRwGOnVXN5OHqheLl3V1C0uVVRPtjTJkHkhw==}
 
   vue3-colorpicker@2.3.0:
     resolution: {integrity: sha512-e3lLmBcy7mkRrNQVeUny1DjOd6E11L8H5ok5Bx4MdXmrG+RzyacRF7KkhrEWmRYPhKAsaoUrWsFkmpPAaYnE5A==}
@@ -4888,6 +4894,8 @@ snapshots:
     dependencies:
       is-plain-object: 3.0.1
       vue: 3.5.13(typescript@5.6.3)
+
+  vue-waterfall-plugin-next@2.6.5: {}
 
   vue3-colorpicker@2.3.0(@aesoper/normal-utils@0.1.5)(@popperjs/core@2.11.8)(@vueuse/core@10.11.1(vue@3.5.13(typescript@5.6.3)))(gradient-parser@1.1.1)(lodash-es@4.17.21)(tinycolor2@1.6.0)(vue-types@3.0.2(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3)):
     dependencies:

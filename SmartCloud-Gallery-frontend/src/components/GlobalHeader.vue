@@ -173,6 +173,7 @@ const openGitee = () => {
     }
 
     .logo {
+      margin-left: 30px;
       height: 48px;
     }
   }

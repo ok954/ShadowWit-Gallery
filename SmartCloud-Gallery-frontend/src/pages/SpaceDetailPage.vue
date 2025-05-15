@@ -192,7 +192,6 @@ const onSearch = (newSearchParams: API.PictureQueryRequest) => {
     ...newSearchParams,
     current: 1,
   }
-  console.log('searchparams', searchParams.value)
   fetchData()
 }
 

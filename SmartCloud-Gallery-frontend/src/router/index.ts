@@ -15,6 +15,7 @@ import SpaceDetailPage from '@/pages/SpaceDetailPage.vue'
 import SearchPicturePage from '@/pages/SearchPicturePage.vue'
 import SpaceAnalyzePage from '@/pages/SpaceAnalyzePage.vue'
 import SpaceUserManagePage from '@/pages/admin/SpaceUserManagePage.vue'
+import HomePageFlow from '@/pages/HomePageFlow.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -22,7 +23,8 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomePage,
+      // component: HomePage,// 普通卡片
+      component:HomePageFlow//瀑布流
     },
     {
       path: '/user/login',
