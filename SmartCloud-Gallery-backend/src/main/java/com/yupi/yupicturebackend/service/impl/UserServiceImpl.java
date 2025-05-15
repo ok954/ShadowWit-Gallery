@@ -129,6 +129,23 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return this.getLoginUserVO(user);
     }
 
+    @Override
+    public boolean changePassword(User loginUser, String oldPassword, String newPassword) {
+        // 校验旧密码是否匹配
+        String encryptedOldPassword = getEncryptPassword(oldPassword);
+        if (!loginUser.getUserPassword().equals(encryptedOldPassword)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "旧密码错误");
+        }
+
+        // 更新密码
+        User updateUser = new User();
+        updateUser.setId(loginUser.getId());
+        updateUser.setUserPassword(getEncryptPassword(newPassword));
+
+        return this.updateById(updateUser);
+    }
+
+
     /**
      * 获取加密后的密码
      *

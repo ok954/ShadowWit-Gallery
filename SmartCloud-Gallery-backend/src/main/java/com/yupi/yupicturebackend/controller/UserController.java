@@ -17,6 +17,7 @@ import com.yupi.yupicturebackend.model.entity.User;
 import com.yupi.yupicturebackend.model.vo.LoginUserVO;
 import com.yupi.yupicturebackend.model.vo.UserVO;
 import com.yupi.yupicturebackend.service.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -75,6 +76,43 @@ public class UserController {
         boolean result = userService.userLogout(request);
         return ResultUtils.success(result);
     }
+
+    /**
+     * 修改密码
+     */
+    /**
+     * 修改密码
+     */
+    @PostMapping("/change/password")
+    public BaseResponse<Boolean> changePassword(@RequestBody UserChangePasswordRequest userChangePasswordRequest,
+                                                HttpServletRequest request) {
+        if (userChangePasswordRequest == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+
+        String oldPassword = userChangePasswordRequest.getOldPassword();
+        String newPassword = userChangePasswordRequest.getNewPassword();
+        String checkPassword = userChangePasswordRequest.getCheckPassword();
+
+        // 手动校验参数非空
+        if (StringUtils.isAnyBlank(oldPassword, newPassword, checkPassword)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数不能为空");
+        }
+
+        // 校验新密码和确认密码是否一致
+        if (!newPassword.equals(checkPassword)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "两次输入的新密码不一致");
+        }
+
+        // 获取当前登录用户
+        User loginUser = userService.getLoginUser(request);
+
+        // 调用 service 方法修改密码
+        boolean result = userService.changePassword(loginUser, oldPassword, newPassword);
+
+        return ResultUtils.success(result);
+    }
+
 
     /**
      * 创建用户

@@ -26,6 +26,9 @@
                   <a-menu-item @click="gotoUserInfo">
                     <UserOutlined /> 个人中心
                   </a-menu-item>
+                  <a-menu-item @click="gotoChangePassword">
+                    <UserOutlined /> 修改密码
+                  </a-menu-item>
                   <a-menu-item @click="openGitee">
                     <component :is="GiteeOutlined" />
                     项目地址
@@ -43,17 +46,30 @@
           </div>
         </div>
       </a-col>
+      <div class="modal-wrapper" @click="handleWrapperClick">
+        <a-modal
+          v-model:visible="open"
+          title="修改密码"
+          :footer="false"
+          :mask-closable="true"
+        >
+          <UserChangePassword @success="handleSuccess" />
+        </a-modal>
+      </div>
     </a-row>
+
+
   </div>
 </template>
 <script lang="ts" setup>
-import { computed, h, onMounted, ref } from 'vue'
+import { computed, h, onMounted, onUnmounted, ref } from 'vue'
 import { HomeOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons-vue'
 import { type MenuProps, message } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
 import { useLoginUserStore } from '@/stores/useLoginUserStore'
 import { userLogoutUsingPost } from '@/api/userController.ts'
 import GiteeOutlined from '@/components/icons/GiteeOutlined.vue'
+import UserChangePassword from '@/pages/user/userChangePassword.vue'
 
 const loginUserStore = useLoginUserStore()
 
@@ -153,6 +169,7 @@ const gotoUserInfo = () => {
   })
 }
 
+
 const openGitee = () => {
   if (typeof window !== 'undefined') {
     window.open('https://gitee.com/gyx915/smart-cloud-gallery', '_blank')
@@ -165,6 +182,18 @@ const goToHome = () => {
   router.push('/')
   window.scrollTo({ top: 0, behavior: 'smooth' }) // 平滑滚动到顶部
 }
+
+const open = ref<boolean>(false);
+const gotoChangePassword = () => {
+  open.value = true;
+};
+
+
+const handleSuccess = () => {
+  open.value = false
+}
+
+
 </script>
 
 <style scoped lang="scss">

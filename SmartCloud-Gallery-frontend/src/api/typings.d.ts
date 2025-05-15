@@ -688,6 +688,16 @@ declare namespace API {
     userRole?: string
   }
 
+  type UserChangePasswordRequest = {
+    checkPassword?: string
+    current?: number
+    newPassword?: string
+    oldPassword?: string
+    pageSize?: number
+    sortField?: string
+    sortOrder?: string
+  }
+
   type UserLoginRequest = {
     userAccount?: string
     userPassword?: string

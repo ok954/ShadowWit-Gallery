@@ -31,6 +31,7 @@ const router = createRouter({
       name: '用户登录',
       component: UserLoginPage,
     },
+
     {
       path: '/user/userInfo/:id',
       name: '用户编辑',

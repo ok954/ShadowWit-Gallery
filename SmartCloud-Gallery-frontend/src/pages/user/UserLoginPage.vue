@@ -50,6 +50,7 @@ const handleSubmit = async (values: any) => {
       await loginUserStore.fetchLoginUser()
       message.success('登录成功')
       const redirect = (router.currentRoute.value.query.redirect as string) || '/'
+      console.log(redirect,'redirect')
       await router.push({
         path: redirect,
         replace: true,

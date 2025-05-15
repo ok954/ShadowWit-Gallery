@@ -15,4 +15,9 @@ dayjs.locale('zh-cn')
 const locale = zhCN
 </script>
 
-<style scoped></style>
+<style >
+
+:global(.ant-message) {
+  z-index: 999999 !important;
+}
+</style>
