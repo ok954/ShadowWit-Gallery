@@ -1,4 +1,5 @@
 <template>
+
   <div id="homePage">
     <!-- 搜索框 -->
     <div :class="['sticky-header', { sticky: isSticky, hidden: isSearchHidden }]" ref="searchRef">
@@ -14,27 +15,15 @@
         />
 
       </div>
+      <!-- 分类和标签筛选 -->
       <a-tabs v-model:active-key="selectedCategory" @change="doSearch">
         <a-tab-pane key="all" tab="全部" />
         <a-tab-pane v-for="category in categoryList" :tab="category" :key="category" />
       </a-tabs>
 
     </div>
-    <!-- 分类和标签筛选 -->
 
-<!--    <div class="tag-bar">-->
-<!--      <span style="margin-right: 8px">标签：</span>-->
-<!--      <a-space :size="[0, 8]" wrap>-->
-<!--        <a-checkable-tag-->
-<!--          v-for="(tag, index) in tagList"-->
-<!--          :key="tag"-->
-<!--          v-model:checked="selectedTagList[index]"-->
-<!--          @change="doSearch"-->
-<!--        >-->
-<!--          {{ tag }}-->
-<!--        </a-checkable-tag>-->
-<!--      </a-space>-->
-<!--    </div>-->
+
 
     <!-- 占位元素 -->
     <div v-if="isSticky" class="sticky-placeholder"></div>
@@ -62,7 +51,6 @@
     </div>
 
     </div>
-
 </template>
 
 <script setup lang="ts">
@@ -78,6 +66,8 @@ import {
 import PictureFlowList from '@/components/PictureFlowList.vue'
 import { EyeOutlined } from '@ant-design/icons-vue'
 
+
+defineOptions({ name: 'HomePageFlow' })
 const homePictureList = ref<API.Picture[]>([])
 /**
  * 加载变量状态

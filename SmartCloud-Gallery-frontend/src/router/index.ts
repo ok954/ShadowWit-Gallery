@@ -24,7 +24,10 @@ const router = createRouter({
       path: '/',
       name: 'home',
       // component: HomePage,// 普通卡片
-      component:HomePageFlow//瀑布流
+      component:HomePageFlow,//瀑布流
+      meta: {
+        keepAlive: true
+      }
     },
     {
       path: '/user/login',

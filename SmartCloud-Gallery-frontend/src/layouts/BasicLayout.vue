@@ -22,7 +22,12 @@
         }">
         <GlobalSider class="sider" />
         <a-layout-content class="content">
-          <router-view />
+          <router-view v-slot="{ Component }">
+            <keep-alive>
+              <component :is="Component" v-if="$route.meta.keepAlive" />
+            </keep-alive>
+            <component :is="Component" v-if="!$route.meta.keepAlive" />
+          </router-view>
           <div style="margin-bottom: 48px"></div>
         </a-layout-content>
       </a-layout>
@@ -50,15 +55,7 @@
 import GlobalHeader from '@/components/GlobalHeader.vue'
 import GlobalSider from '@/components/GlobalSider.vue'
 import { ref } from 'vue'
-import Icon, {
-  RocketOutlined,
-  DownOutlined,
-  GithubOutlined,
-  CopyrightOutlined,
-  CalendarOutlined,
-  UserOutlined,
-  HomeOutlined,
-} from '@ant-design/icons-vue'
+import  { DownOutlined} from '@ant-design/icons-vue'
 
 
 // 控制顶部菜单显示状态
