@@ -1,6 +1,5 @@
 <template>
   <div id="pictureDetailPage">
-    {{isAdmin}}
     <a-row :gutter="[16, 16]">
       <!--      图片预览-->
       <a-col :sm="24" :md="16" :xl="18">

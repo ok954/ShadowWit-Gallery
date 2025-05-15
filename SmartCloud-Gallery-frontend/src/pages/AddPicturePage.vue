@@ -2,7 +2,7 @@
   <div id="addPicturePage">
     <h2 style="margin-bottom: 16px">{{ route.query?.id ? '编辑图片' : '创建图片' }}</h2>
     <a-typography-paragraph v-if="spaceId" type="secondary">
-      保存至空间：<a :href="`/space/${spaceId}`" target="_blank">{{ spaceId }}</a>
+      保存至空间：<a :href="`/space/${spaceId}`" >{{ spaceId }}</a>
     </a-typography-paragraph>
     <a-tabs v-model:activeKey="uploadType">
       <a-tab-pane key="file" tab="文件上传">

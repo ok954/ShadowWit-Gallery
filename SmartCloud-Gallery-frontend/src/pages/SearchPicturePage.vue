@@ -16,7 +16,7 @@
     >
       <template #renderItem="{ item: picture }">
         <a-list-item style="padding: 0">
-          <a :href="picture.imgUrl" target="_blank">
+          <a :href="picture.imgUrl" >
             <!-- 单张图片 -->
             <a-card hoverable>
               <template #cover>
