@@ -9,6 +9,7 @@
         <a-input v-model:value="searchParams.userName" placeholder="输入用户名" allow-clear />
       </a-form-item>
       <a-form-item>
+
         <a-button type="primary" html-type="submit">搜索</a-button>
         <a-button style="margin-left: 10px" @click="resetForm">重置</a-button>
       </a-form-item>
@@ -37,15 +38,25 @@
           {{ dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss') }}
         </template>
         <template v-else-if="column.key === 'action'">
-          <a-button type="link" @click="doEdit(record.id)">编辑</a-button>
-          <a-popconfirm
-            title="你确定要删除该用户?"
-            ok-text="确认"
-            cancel-text="取消"
-            @confirm="confirm(record.id)"
-          >
-            <a-button danger @click="doDelete()">删除</a-button>
-          </a-popconfirm>
+         <a-space>
+           <a-button type="link" @click="doEdit(record.id)">编辑</a-button>
+           <a-popconfirm
+             title="你确定要删除该用户?"
+             ok-text="确认"
+             cancel-text="取消"
+             @confirm="confirm(record.id)"
+           >
+             <a-button danger @click="doDelete()">删除</a-button>
+           </a-popconfirm>
+           <a-popconfirm
+             title="你确定要为该用户重置密码为111111?"
+             ok-text="确认"
+             cancel-text="取消"
+             @confirm="confirmReset(record.id)"
+           >
+             <a-button  type="default">重置密码</a-button>
+           </a-popconfirm>
+         </a-space>
         </template>
       </template>
     </a-table>
@@ -54,7 +65,7 @@
 
 <script lang="ts" setup>
 import { computed, onMounted, reactive, ref } from 'vue'
-import { deleteUserUsingPost, listUserVoByPageUsingPost } from '@/api/userController.ts'
+import { deleteUserUsingPost, listUserVoByPageUsingPost, resetPasswordUsingPost } from '@/api/userController.ts'
 import { type FormInstance, message } from 'ant-design-vue'
 import dayjs from 'dayjs'
 import { useRouter } from 'vue-router'
@@ -186,9 +197,30 @@ const doEdit = (id) => {
   })
 }
 
+// 重置用户密码
+const doReset = async (id: string) => {
+  try {
+    if (!id) {
+      return
+    }
+    const res = await resetPasswordUsingPost({ id })
+    if (res.data.code === 0) {
+      message.success('重置密码成功')
+    } else {
+      message.error('重置密码失败' + res.data.message)
+    }
+  } catch (error: any) {
+    message.error('重置密码失败' + error.message)
+  }
+}
+
 // 气泡确认框
 const confirm = (id: string) => {
   doDelete(id)
+}
+
+const confirmReset = (id: string) => {
+  doReset(id)
 }
 </script>
 <style scoped lang="scss">

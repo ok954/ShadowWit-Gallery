@@ -114,4 +114,12 @@ public interface UserService extends IService<User> {
      */
     boolean changePassword(User loginUser, String oldPassword, String newPassword);
 
+    /**
+     * 重置用户密码
+     *
+     * @param userId       用户ID
+     * @param newPassword  新密码（明文）
+     * @return 是否成功
+     */
+    boolean resetPassword(Long userId, String newPassword);
 }

@@ -77,9 +77,7 @@ public class UserController {
         return ResultUtils.success(result);
     }
 
-    /**
-     * 修改密码
-     */
+
     /**
      * 修改密码
      */
@@ -113,6 +111,25 @@ public class UserController {
         return ResultUtils.success(result);
     }
 
+
+    /**
+     * 重置用户密码（仅管理员）
+     */
+    @PostMapping("/reset/password")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    public BaseResponse<Boolean> resetPassword(@RequestBody UserIdRequest userIdRequest) {
+        if (userIdRequest == null || userIdRequest.getId() <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+
+        Long userId = userIdRequest.getId();
+        String defaultPassword = "111111";
+
+        // 调用 service 方法执行重置密码逻辑
+        boolean result = userService.resetPassword(userId, defaultPassword);
+
+        return ResultUtils.success(result);
+    }
 
     /**
      * 创建用户

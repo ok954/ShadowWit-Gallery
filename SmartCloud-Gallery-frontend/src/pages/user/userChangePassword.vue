@@ -9,7 +9,7 @@
         name="newPassword"
         :rules="[
           { required: true, message: '请输入新密码!' },
-          { min: 8, message: '密码长度不能小于8位' },
+          { min: 6, message: '密码长度不能小于6位' },
         ]"
       >
         <a-input-password v-model:value="formState.newPassword" placeholder="请输入新密码" />
@@ -19,7 +19,7 @@
         name="checkPassword"
         :rules="[
           { required: true, message: '请输入确认密码!' },
-          { min: 8, message: '确认密码长度不能小于8位' },
+          { min: 6, message: '确认密码长度不能小于6位' },
         ]"
       >
         <a-input-password v-model:value="formState.checkPassword" placeholder="请输入确认密码" />
@@ -67,7 +67,6 @@ const handleSubmit = async (values: any) => {
       message.error('修改失败' + res.data.message)
     }
   } catch (e: any) {
-    alert('1')
     message.error('修改失败' + e.message)
   }
 }

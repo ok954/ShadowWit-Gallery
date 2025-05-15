@@ -698,6 +698,10 @@ declare namespace API {
     sortOrder?: string
   }
 
+  type UserIdRequest = {
+    id?: number
+  }
+
   type UserLoginRequest = {
     userAccount?: string
     userPassword?: string

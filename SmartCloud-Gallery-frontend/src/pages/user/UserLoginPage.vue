@@ -8,7 +8,7 @@
 
       <a-form-item name="userPassword" :rules="[
         { required: true, message: '请输入密码!' },
-        { min: 8, message: '密码长度不能小于8位' },
+        { min: 6, message: '密码长度不能小于6位' },
       ]">
         <a-input-password v-model:value="formState.userPassword" placeholder="请输入密码" />
       </a-form-item>

@@ -135,17 +135,7 @@ onUnmounted(() => {
   position: fixed;
   top: 0;
   left: 0;
-  //right: 0;
-  //z-index: 1000;
-  //padding: 10px 20px;
-  //background: rgba(255, 255, 255, 0.96);
-  //backdrop-filter: blur(5px);
-  //box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   height: 100% !important;
 }
 
-/* 占位元素 */
-.sticky-placeholder {
-  //height: calc(50px + 46px + 48px); /* logo高度 + 搜索框高度 + 标签高度 + 间距 */
-}
 </style>
