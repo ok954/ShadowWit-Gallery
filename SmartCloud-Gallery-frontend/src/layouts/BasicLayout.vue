@@ -117,7 +117,7 @@ document.addEventListener('mousemove', (e) => {
   left: 0;
   right: 0;
   height: 64px; /* 明确设置高度 */
-  z-index: 10000;
+  z-index: 1000;
   transition: transform 0.3s ease-in-out;
 }
 

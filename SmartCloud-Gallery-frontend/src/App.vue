@@ -17,7 +17,4 @@ const locale = zhCN
 
 <style >
 
-:global(.ant-message) {
-  z-index: 999999 !important;
-}
 </style>
