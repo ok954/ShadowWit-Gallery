@@ -1,5 +1,6 @@
 <template>
   <div id="pictureDetailPage">
+    {{isAdmin}}
     <a-row :gutter="[16, 16]">
       <!--      图片预览-->
       <a-col :sm="24" :md="16" :xl="18">
@@ -56,11 +57,14 @@
                 }" />
               </a-space>
             </a-descriptions-item>
-            <!--            团队中不需要审核-->
-            <a-descriptions-item label="审核状态" v-if="isAdmin && !canEdit1">
-              {{ PIC_REVIEW_STATUS_MAP[picture.reviewStatus] }}
+            <!--   团队中不需要审核-->
+            <a-descriptions-item label="审核状态" v-if="isAdmin || !canEdit1">
+              <a-tag :color="PIC_REVIEW_STATUS_MAP[picture.reviewStatus] === PIC_REVIEW_STATUS_MAP[PIC_REVIEW_STATUS_ENUM.PASS] ? 'green' : 'red'">
+                {{ PIC_REVIEW_STATUS_MAP[picture.reviewStatus] }}
+              </a-tag>
+<!--              {{  }}-->
             </a-descriptions-item>
-            <a-descriptions-item label="审核信息" v-if="isAdmin && !canEdit1">
+            <a-descriptions-item label="审核信息" v-if="isAdmin || !canEdit1">
               {{ picture.reviewMessage }}
             </a-descriptions-item>
           </a-descriptions>
@@ -85,11 +89,11 @@
             </a-popconfirm>
             <!--仅管理员可见的操作按钮-->
             <!-- 团队中不需要审核-->
-            <a-button v-if="isAdmin && picture.reviewStatus !== PIC_REVIEW_STATUS_ENUM.PASS && !canEdit1" type="default"
+            <a-button v-if="isAdmin && picture.reviewStatus !== PIC_REVIEW_STATUS_ENUM.PASS" type="default"
               @click="showModal(picture, PIC_REVIEW_STATUS_ENUM.PASS)">
               通过
             </a-button>
-            <a-button v-if="isAdmin && picture.reviewStatus !== PIC_REVIEW_STATUS_ENUM.REJECT && !canEdit1"
+            <a-button v-if="isAdmin && picture.reviewStatus !== PIC_REVIEW_STATUS_ENUM.REJECT"
               type="default" danger @click="showModal(picture, PIC_REVIEW_STATUS_ENUM.REJECT)">
               拒绝
             </a-button>
@@ -111,12 +115,10 @@ import { computed, onMounted, ref, h, reactive, watch } from 'vue'
 import { message } from 'ant-design-vue'
 import {
   deletePictureUsingPost,
-  doPictureReviewUsingPost,
-  getPictureByIdUsingGet,
-  getPictureVoByIdUsingGet,
+  doPictureReviewUsingPost, getPictureByIdUsingGet
 } from '@/api/pictureController.ts'
 import { useRouter } from 'vue-router'
-import { DeleteOutlined, EditOutlined, ShareAltOutlined } from '@ant-design/icons-vue'
+import { DeleteOutlined, EditOutlined, ShareAltOutlined,DownloadOutlined } from '@ant-design/icons-vue'
 import { downloadImage, formatSize, toHexColor } from '@/utils'
 import { useLoginUserStore } from '@/stores/useLoginUserStore.ts'
 import { PIC_REVIEW_STATUS_ENUM, PIC_REVIEW_STATUS_MAP } from '@/constants/picture.ts'
@@ -148,8 +150,8 @@ const isAdmin = computed(() => {
 // 通用权限检查函数, 这是团队的权限
 function createPermissionChecker(permission: string) {
   return computed(() => {
-    console.log('全部权限', picture.value.permissionList)
-    console.log('是否包含', permission)
+    // console.log('全部权限', picture.value.permissionList)
+    // console.log('是否包含', permission)
     return (picture.value.permissionList ?? []).includes(permission)
   })
 }
@@ -161,11 +163,12 @@ const canDelete = createPermissionChecker(SPACE_PERMISSION_ENUM.PICTURE_DELETE)
 //获取图片详情
 const fetchPictureDetail = async () => {
   try {
-    const res = await getPictureVoByIdUsingGet({
+    const res = await getPictureByIdUsingGet({
       id: props.id,
     })
     if (res.data.code === 0 && res.data.data) {
       picture.value = res.data.data
+      picture.value.tags = JSON.parse( picture.value.tags)
     } else {
       message.error('获取图片详情失败' + res.data.message)
     }
@@ -218,40 +221,51 @@ const doDownload = () => {
 
 // 审核
 const open = ref<boolean>(false)
-const reviewStatus = ref<number>(0)
 const msg = ref<string>('')
 const picture = ref<API.Picture>({})
 
-watch(
-  () => reviewStatus.value,
-  (newVal) => {
-    picture.value.reviewMessage = newVal === 1 ? '管理员操作通过' : '管理员操作拒绝'
-  },
-  { immediate: true },
-)
 
 const showModal = (record: API.Picture, status: number) => {
-  reviewStatus.value = status
+
+  params.reviewStatus = status
   picture.value = record
+  params.id = picture.value.id
+  msg.value=''
   open.value = true
 }
 
+
+let params = reactive({
+  id: '',
+  reviewStatus: '',
+  reviewMessage: '' ,
+})
+
+
 const handleOk = async () => {
-  console.log(picture.value.name)
+  if(msg.value===''){
+     params.reviewMessage = (params.reviewStatus === 1 ? '管理员操作通过' : '管理员操作拒绝')
+  }
+  if(msg.value){
+    params.reviewMessage = msg.value
+  }
   const res = await doPictureReviewUsingPost({
-    id: picture.value.id,
-    reviewStatus: reviewStatus.value,
-    reviewMessage: msg.value ?? picture.value.reviewMessage,
+    id:params.id,
+    reviewStatus:params.reviewStatus,
+    reviewMessage:params.reviewMessage
   })
   if (res.data.code === 0) {
+
     message.success('审核操作成功')
+    // reviewStatus.value=''
     // 重新获取列表数据
     fetchPictureDetail()
   } else {
+
     message.error('审核操作失败，' + res.data.message)
   }
-
   open.value = false
+
 }
 
 // 气泡确认框

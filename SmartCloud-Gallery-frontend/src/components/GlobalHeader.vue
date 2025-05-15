@@ -2,12 +2,12 @@
   <div id="globalHeader">
     <a-row :wrap="false">
       <a-col flex="200px">
-        <router-link to="/">
+        <div @click="goToHome">
           <div class="title-bar">
             <img class="logo" src="../assets/logo.png" alt="logo" />
             <div class="title">智能云图库</div>
           </div>
-        </router-link>
+        </div>
       </a-col>
       <a-col flex="auto">
         <a-menu v-model:selectedKeys="current" mode="horizontal" :items="items" @click="doMenuClick" />
@@ -158,6 +158,13 @@ const openGitee = () => {
     window.open('https://gitee.com/gyx915/smart-cloud-gallery', '_blank')
   }
 }
+
+// 前往首页
+
+const goToHome = () => {
+  router.push('/')
+  window.scrollTo({ top: 0, behavior: 'smooth' }) // 平滑滚动到顶部
+}
 </script>
 
 <style scoped lang="scss">
@@ -165,6 +172,7 @@ const openGitee = () => {
   .title-bar {
     display: flex;
     align-items: center;
+    cursor: pointer;
 
     .title {
       font-size: 18px;
