@@ -29,3 +29,21 @@
 - 其他组件：数据可视化、图片编辑等
 - 前端工程化：ESLint + Prettier + TypeScript
 -  OpenAPI 前端代码生成
+
+## 网站图片
+
+![image-20250515224135931](assets/image-20250515224135931.png)
+
+![image-20250515224224301](assets/image-20250515224224301.png)
+
+![image-20250515224330977](assets/image-20250515224330977.png)
+
+![image-20250515230712805](assets/image-20250515230712805.png)
+
+![image-20250515230933241](assets/image-20250515230933241.png)
+
+![image-20250515232123350](assets/image-20250515232123350.png)
+
+![image-20250515232246541](assets/image-20250515232246541.png)
+
+![image-20250515232427875](assets/image-20250515232427875.png)
