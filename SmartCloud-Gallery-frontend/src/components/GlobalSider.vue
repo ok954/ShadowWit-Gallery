@@ -2,8 +2,9 @@
   <div id="globalSider" >
 
     <div :class="['sticky-sider', { sticky: isSticky }]">
-      <a-layout-sider   v-if="loginUserStore.loginUser.id" width="200"  v-model:collapsed="collapsed" collapsible theme="light">
-<!--        <span @click="closeSider"><<</span>-->
+      <a-layout-sider v-if="loginUserStore.loginUser.id" width="200"
+                      v-model:collapsed="collapsed" :default-collapsed="true"
+                      collapsible theme="light"  collapsed-width="0">
         <a-menu v-model:selectedKeys="current" mode="inline" :items="menuItems" @click="doMenuClick" />
       </a-layout-sider>
     </div>
@@ -18,8 +19,10 @@ import { useLoginUserStore } from '@/stores/useLoginUserStore.ts'
 import { useTeamSpaceStore } from '@/stores/useTeamSpaceStore.ts'
 import { SPACE_TYPE_ENUM } from '@/constants/space.ts'
 
-const collapsed = ref<boolean>(false);
+const collapsed = ref<boolean>(true);
 const loginUserStore = useLoginUserStore()
+
+
 
 // 固定的菜单列表
 const fixedMenuItems = [

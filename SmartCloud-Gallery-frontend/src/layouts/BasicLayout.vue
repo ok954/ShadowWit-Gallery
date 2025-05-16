@@ -91,7 +91,7 @@ document.addEventListener('mousemove', (e) => {
 }
 
 .dropdown-indicator {
-  background-color: #1890ff; /* 使用主题色 */
+  background-color: #61b1f8; /* 使用主题色 */
   color: white;
   border-radius: 0 0 8px 8px;
   padding: 0px 16px;
@@ -131,7 +131,7 @@ document.addEventListener('mousemove', (e) => {
 
 #basicLayout .content {
   padding: 28px;
-  //background: linear-gradient(to right, #fefefe, #fff);
+  //background: linear-gradient(to right, #fbf1f1, #fff);
   background-color: #fff;
   //margin-bottom: 300px;
 }
