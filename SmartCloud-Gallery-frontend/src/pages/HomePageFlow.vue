@@ -1,10 +1,8 @@
 <template>
-
   <div id="homePage">
     <!-- 搜索框 -->
     <div :class="['sticky-header', { sticky: isSticky, hidden: isSearchHidden }]" ref="searchRef">
-
-    <div class="search-bar">
+      <div class="search-bar">
         <a-input-search
           v-model:value="searchParams.searchText"
           placeholder="从海量图片中搜索"
@@ -13,17 +11,13 @@
           @search="doSearch"
           class="logo-search"
         />
-
       </div>
       <!-- 分类和标签筛选 -->
       <a-tabs v-model:active-key="selectedCategory" @change="doSearch">
         <a-tab-pane key="all" tab="全部" />
         <a-tab-pane v-for="category in categoryList" :tab="category" :key="category" />
       </a-tabs>
-
     </div>
-
-
 
     <!-- 占位元素 -->
     <div v-if="isSticky" class="sticky-placeholder"></div>
@@ -33,10 +27,7 @@
     </div>
     <div v-else>
       <!-- 图片列表 -->
-      <PictureFlowList
-        :pictureList="homePictureList"
-        :loading="homeLoading"
-      />
+      <PictureFlowList :pictureList="homePictureList" :loading="homeLoading" />
 
       <!-- 加载信息 -->
       <div class="loadingInfo">
@@ -49,13 +40,10 @@
         </div>
       </div>
     </div>
-
-    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-
-
 // 数据
 import { computed, onMounted, onUnmounted, reactive, ref } from 'vue'
 import { Empty, message } from 'ant-design-vue'
@@ -65,7 +53,6 @@ import {
 } from '@/api/pictureController.ts'
 import PictureFlowList from '@/components/PictureFlowList.vue'
 import { EyeOutlined } from '@ant-design/icons-vue'
-
 
 defineOptions({ name: 'HomePageFlow' })
 const homePictureList = ref<API.Picture[]>([])
@@ -87,7 +74,7 @@ const isSticky = ref(false)
 
 // 滚动监听
 const checkSticky = () => {
-  isSticky.value = window.scrollY > 100
+  isSticky.value = window.scrollY > 110
 }
 
 /**
@@ -116,7 +103,6 @@ const searchParams = reactive<API.PictureQueryRequest>({
   sortOrder: 'descend',
 })
 
-
 const loadingLock = ref(false)
 // 获取数据
 const fetchData = async () => {
@@ -134,7 +120,6 @@ const fetchData = async () => {
     })
     const res = await listPictureVoByPageUsingPost(params)
     if (res.data.code === 0 && res.data.data) {
-
       const newRecords = res.data.data.records || []
       homePictureList.value = [...homePictureList.value, ...newRecords]
       checkPageHeight()
@@ -156,7 +141,7 @@ const fetchData = async () => {
     }
   } catch (error: any) {
     message.error('获取用户列表失败' + error.message)
-  }finally {
+  } finally {
     homeLoading.value = false
     loadingLock.value = false
   }
@@ -187,9 +172,6 @@ const doSearch = () => {
   homePictureList.value = []
   fetchData()
 }
-
-
-
 
 /**
  * 获取标签和分类选项
@@ -234,8 +216,7 @@ const checkPageHeight = () => {
 const handleScroll = () => {
   if (loadingFinish.value || homeLoading.value) return
   const scrollHeight = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight)
-  const scrollTop =
-    window.scrollY || document.documentElement.scrollTop || document.body.scrollTop
+  const scrollTop = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop
   const clientHeight =
     window.innerHeight ||
     Math.min(document.documentElement.clientHeight, document.body.clientHeight)
@@ -269,12 +250,9 @@ const isSearchHidden = ref(false)
 const toggleSearch = () => {
   isSearchHidden.value = !isSearchHidden.value
 }
-
 </script>
 
 <style scoped lang="scss">
-
-
 #homePage {
   .search-bar {
     max-width: 480px;
@@ -289,8 +267,8 @@ const toggleSearch = () => {
   }
   /* 吸顶容器 */
   .sticky-header {
-    background: white;
-    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0);
+    //transition: all 0.3s ease;
     padding: 0 20px;
   }
   .sticky-header.sticky {
@@ -301,11 +279,16 @@ const toggleSearch = () => {
     right: 0;
     z-index: 800;
     padding: 10px 20px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgb(255, 255, 255);
     //display: none;
+    opacity: 0;
     backdrop-filter: blur(5px);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     max-width: 100% !important;
+    //transition: all 0.3s ease;
+    &:hover {
+      opacity: 1;
+    }
   }
 
   /* 占位元素 */
@@ -381,8 +364,6 @@ const toggleSearch = () => {
     background: #4096ff;
     height: 3px;
   }
-
-
 }
 
 .loadingInfo {

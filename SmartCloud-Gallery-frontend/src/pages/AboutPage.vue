@@ -236,12 +236,10 @@
 
     <!-- 技术支持 -->
     <a-divider />
-    <div class="footer-actions">
-      <!--      <a-button type="primary" @click="externalLink('https://fenlifang.top')"> 联系我 </a-button>-->
-      <a-button type="link" @click="externalLink('https://gitee.com/gyx915/smart-cloud-gallery')">
-        源码🔗Gitee
-      </a-button>
-    </div>
+    <!--    <div class="footer-actions">-->
+    <!--      &lt;!&ndash;      <a-button type="primary" @click="externalLink('https://fenlifang.top')"> 联系我 </a-button>&ndash;&gt;-->
+
+    <!--    </div>-->
   </a-page-header>
 </template>
 
@@ -260,11 +258,6 @@ const router = useRouter()
 // 路由跳转
 const navigateTo = (path) => {
   router.push(path)
-}
-
-// 外部链接跳转
-const externalLink = (url) => {
-  window.open(url, '_blank')
 }
 
 // 权限表格数据
