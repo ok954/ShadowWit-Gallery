@@ -6,10 +6,13 @@
         <a-input v-model:value="formState.userAccount" placeholder="请输入账号" />
       </a-form-item>
 
-      <a-form-item name="userPassword" :rules="[
-        { required: true, message: '请输入密码!' },
-        { min: 6, message: '密码长度不能小于6位' },
-      ]">
+      <a-form-item
+        name="userPassword"
+        :rules="[
+          { required: true, message: '请输入密码!' },
+          { min: 6, message: '密码长度不能小于6位' },
+        ]"
+      >
         <a-input-password v-model:value="formState.userPassword" placeholder="请输入密码" />
       </a-form-item>
 
@@ -49,10 +52,11 @@ const handleSubmit = async (values: any) => {
     if (res.data.code === 0 && res.data.data) {
       await loginUserStore.fetchLoginUser()
       message.success('登录成功')
-      // const redirect = (router.currentRoute.value.query.redirect as string) || '/'
+      const redirect = (router.currentRoute.value.query.redirect as string) || '/'
       // console.log(redirect,'redirect')
+      // alert(redirect)
       await router.push({
-        path: '/',
+        path: redirect,
         replace: true,
       })
     } else {

@@ -1,28 +1,35 @@
 <template>
-  <div id="globalSider" >
-
+  <div id="globalSider">
     <div :class="['sticky-sider', { sticky: isSticky }]">
-      <a-layout-sider v-if="loginUserStore.loginUser.id" width="200"
-                      v-model:collapsed="collapsed" :default-collapsed="true"
-                      collapsible theme="light"  collapsed-width="0">
-        <a-menu v-model:selectedKeys="current" mode="inline" :items="menuItems" @click="doMenuClick" />
+      <a-layout-sider
+        v-if="loginUserStore.loginUser.id"
+        width="200"
+        v-model:collapsed="collapsed"
+        :default-collapsed="true"
+        collapsible
+        theme="light"
+        collapsed-width="0"
+      >
+        <a-menu
+          v-model:selectedKeys="current"
+          mode="inline"
+          :items="menuItems"
+          @click="doMenuClick"
+        />
       </a-layout-sider>
     </div>
-
   </div>
 </template>
 <script lang="ts" setup>
-import { computed, h, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue'
+import { computed, h, onMounted, onUnmounted, ref, watch } from 'vue'
 import { PictureOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons-vue'
 import { useRouter } from 'vue-router'
 import { useLoginUserStore } from '@/stores/useLoginUserStore.ts'
 import { useTeamSpaceStore } from '@/stores/useTeamSpaceStore.ts'
 import { SPACE_TYPE_ENUM } from '@/constants/space.ts'
 
-const collapsed = ref<boolean>(true);
+const collapsed = ref<boolean>(true)
 const loginUserStore = useLoginUserStore()
-
-
 
 // 固定的菜单列表
 const fixedMenuItems = [
@@ -43,9 +50,8 @@ const fixedMenuItems = [
   },
 ]
 
-
 const teamSpaceStore = useTeamSpaceStore()
-onMounted(async ()=>{
+onMounted(async () => {
   await teamSpaceStore.fetchTeamSpaceList()
 })
 
@@ -57,15 +63,14 @@ const menuItems = computed(() => {
   // 如果用户有团队空间，则展示固定菜单和团队空间菜单
   // 展示团队空间分组
   const teamSpaceSubMenus = teamSpaceStore.teamSpaceList
-    .filter(spaceUser => spaceUser.space?.spaceName)
-    .map((spaceUser,index) => {
-
-    const space = spaceUser.space
-    return {
-      key: '/space/' + spaceUser.spaceId,
-      label: space?.spaceName,
-    }
-  })
+    .filter((spaceUser) => spaceUser.space?.spaceName)
+    .map((spaceUser, index) => {
+      const space = spaceUser.space
+      return {
+        key: '/space/' + spaceUser.spaceId,
+        label: space?.spaceName,
+      }
+    })
   const teamSpaceMenuGroup = {
     type: 'group',
     label: '我的团队',
@@ -77,10 +82,12 @@ const menuItems = computed(() => {
 /**
  * 监听变量，改变时触发数据的重新加载
  */
-watch(()=>teamSpaceStore.teamSpaceList?.length, ()=>{
-  teamSpaceStore.fetchTeamSpaceList()
-})
-
+watch(
+  () => teamSpaceStore.teamSpaceList?.length,
+  () => {
+    teamSpaceStore.fetchTeamSpaceList()
+  },
+)
 
 const router = useRouter()
 // 当前要高亮的菜单项
@@ -88,7 +95,7 @@ const current = ref<string[]>([])
 // 监听路由变化，更新高亮菜单项
 router.afterEach((to, from, next) => {
   current.value = [to.path]
-    if (to.path.startsWith('/my_space')) {
+  if (to.path.startsWith('/my_space')) {
     current.value = ['/my_space']
   } else if (to.fullPath === '/add_space') {
     current.value = ['/my_space']
@@ -140,5 +147,4 @@ onUnmounted(() => {
   left: 0;
   height: 100% !important;
 }
-
 </style>

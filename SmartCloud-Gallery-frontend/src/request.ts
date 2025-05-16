@@ -1,19 +1,17 @@
-import axios from "axios";
-import { message } from "ant-design-vue";
+import axios from 'axios'
+import { message } from 'ant-design-vue'
 
 // 区分开发和生产环境
 // alert(process.env.NODE_ENV);
-console.log(process.env.NODE_ENV);
+console.log(process.env.NODE_ENV)
 
 const myAxios = axios.create({
   // 区分开发和线上环境
   baseURL:
-    process.env.NODE_ENV === "development"
-      ? "http://localhost:8123"
-      : "http://121.41.49.251",
+    process.env.NODE_ENV === 'development' ? 'http://localhost:8123' : 'http://121.41.49.251',
   timeout: 10000,
   withCredentials: true,
-});
+})
 
 // 全局请求拦截器
 myAxios.interceptors.request.use(
@@ -39,7 +37,10 @@ myAxios.interceptors.response.use(
         !window.location.pathname.includes('/user/login')
       ) {
         message.warning('请先登录')
-        window.location.href = `/user/login?redirect=${window.location.href}`
+        console.log('window.location.href', window.location.href)
+        //http://localhost:5173/user/login?redirect=http://localhost:5173/
+        // window.location.href = `/user/login?redirect=${window.location.href}`
+        window.location.href = `/user/login`
       }
     }
     return response
@@ -51,4 +52,4 @@ myAxios.interceptors.response.use(
   },
 )
 
-export default myAxios;
+export default myAxios
