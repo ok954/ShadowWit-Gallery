@@ -29,8 +29,8 @@
               <template #overlay>
                 <a-menu>
                   <a-menu-item @click="gotoUserInfo"> <UserOutlined /> 个人中心 </a-menu-item>
-                  <a-menu-item @click="gotoChangePassword"> <UserOutlined /> 修改密码 </a-menu-item>
-                  <a-menu-item @click="openGitee">
+                  <a-menu-item @click="gotoChangePassword"> <EditOutlined /> 修改密码 </a-menu-item>
+                  <a-menu-item @click="openGitHub">
                     <component :is="GiteeOutlined" />
                     项目地址
                   </a-menu-item>
@@ -57,7 +57,7 @@
 </template>
 <script lang="ts" setup>
 import { computed, h, onMounted, onUnmounted, ref } from 'vue'
-import { HomeOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons-vue'
+import { HomeOutlined, LogoutOutlined, UserOutlined, EditOutlined } from '@ant-design/icons-vue'
 import { type MenuProps, message } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
 import { useLoginUserStore } from '@/stores/useLoginUserStore'
@@ -169,9 +169,9 @@ const gotoUserInfo = () => {
   })
 }
 
-const openGitee = () => {
+const openGitHub = () => {
   if (typeof window !== 'undefined') {
-    window.open('https://gitee.com/gyx915/smart-cloud-gallery', '_blank')
+    window.open('https://github.com/ok954/smart-cloud-gallery', '_blank')
   }
 }
 

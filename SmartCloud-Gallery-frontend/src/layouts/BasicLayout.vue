@@ -49,9 +49,15 @@
 
       <!--      </a-layout-footer>-->
       <a-layout-footer class="footer" :class="{ 'show-footer': isFooterVisible }">
-        <a-button type="link" @click="externalLink('https://gitee.com/gyx915/smart-cloud-gallery')">
-          源码🔗Gitee
+        <a-button type="link" @click="externalLink('https://github.com/ok954/smart-cloud-gallery')">
+          源码🔗GitHub
         </a-button>
+        <!--        <a-tooltip placement="top">-->
+        <!--          <template #title>GitHub</template>-->
+        <!--          <a href="https://github.com/ok954/smart-cloud-gallery" class="social-icon" target="_blank">-->
+        <!--            <GithubOutlined />-->
+        <!--          </a>-->
+        <!--        </a-tooltip>-->
       </a-layout-footer>
     </a-layout>
   </div>
@@ -63,6 +69,7 @@ import GlobalSider from '@/components/GlobalSider.vue'
 import { ref } from 'vue'
 import { DownOutlined } from '@ant-design/icons-vue'
 import { useRoute } from 'vue-router'
+import { GithubOutlined } from '@ant-design/icons-vue'
 
 // 控制顶部菜单显示状态
 const isHeaderVisible = ref(false)
