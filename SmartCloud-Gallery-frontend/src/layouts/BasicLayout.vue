@@ -22,7 +22,7 @@
           transition: 'margin-top 0.3s ease-in-out',
         }"
       >
-        <GlobalSider class="sider" />
+        <GlobalSider class="sider" v-if="isNotLogin" />
         <a-layout-content class="content">
           <router-view v-slot="{ Component }">
             <keep-alive>
@@ -62,6 +62,7 @@ import GlobalHeader from '@/components/GlobalHeader.vue'
 import GlobalSider from '@/components/GlobalSider.vue'
 import { ref } from 'vue'
 import { DownOutlined } from '@ant-design/icons-vue'
+import { useRoute } from 'vue-router'
 
 // 控制顶部菜单显示状态
 const isHeaderVisible = ref(false)
@@ -82,6 +83,11 @@ document.addEventListener('mousemove', (e) => {
 const externalLink = (url) => {
   window.open(url, '_blank')
 }
+
+// 控制侧边栏的显示
+// 判断是否不是登录/注册页面
+const route = useRoute()
+const isNotLogin = ref(!['/user/login', '/user/register'].includes(route.path))
 </script>
 
 <style scoped lang="scss">

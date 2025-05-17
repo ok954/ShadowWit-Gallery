@@ -16,11 +16,18 @@ const myAxios = axios.create({
 // 全局请求拦截器
 myAxios.interceptors.request.use(
   function (config) {
-    // Do something before request is sent
+    // 阻止某些路由下请求 spaceUser/list/my 接口
+    // 这个接口会显示侧边栏，登录注册页面不需要
+    const forbiddenPaths = ['/user/login', '/user/register']
+    const currentPath = window.location.pathname
+
+    if (forbiddenPaths.includes(currentPath) && config.url?.includes('spaceUser/list/my')) {
+      return Promise.reject(new Error('当前页面不允许发送该请求'))
+    }
+
     return config
   },
   function (error) {
-    // Do something with request error
     return Promise.reject(error)
   },
 )
@@ -33,8 +40,12 @@ myAxios.interceptors.response.use(
     if (data.code === 40100) {
       // 不是获取用户信息的请求，并且用户目前不是已经在用户登录页面，则跳转到登录页面
       if (
+        // 不是登录接口
         !response.request.responseURL.includes('user/get/login') &&
-        !window.location.pathname.includes('/user/login')
+        //  不是用户登录页面
+        !window.location.pathname.includes('/user/login') &&
+        //  不是首页
+        !window.location.pathname === '/'
       ) {
         message.warning('请先登录')
         console.log('window.location.href', window.location.href)
