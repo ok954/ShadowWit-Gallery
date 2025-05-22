@@ -1,6 +1,6 @@
 <template>
   <div id="userLoginPage">
-    <h2 class="title">智能云图库 - 用户登录</h2>
+    <h2 class="title">影智云图库 - 用户登录</h2>
     <a-form :model="formState" name="basic" autocomplete="off" @finish="handleSubmit">
       <a-form-item name="userAccount" :rules="[{ required: true, message: '请输入用户名!' }]">
         <a-input v-model:value="formState.userAccount" placeholder="请输入账号" />

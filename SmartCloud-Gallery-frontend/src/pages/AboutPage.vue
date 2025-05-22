@@ -1,5 +1,5 @@
 <template>
-  <a-page-header title="智能云图库使用指南" class="guide-container">
+  <a-page-header title="影智云图库使用指南" class="guide-container">
     <!-- 步骤条组件 -->
     <a-steps direction="vertical" :current="5">
       <!-- 功能概览 -->

@@ -5,7 +5,7 @@
         <div @click="goToHome">
           <div class="title-bar">
             <img class="logo" src="../assets/logo.png" alt="logo" />
-            <div class="title">智能云图库</div>
+            <div class="title">影智云图库</div>
           </div>
         </div>
       </a-col>
@@ -31,7 +31,8 @@
                   <a-menu-item @click="gotoUserInfo"> <UserOutlined /> 个人中心 </a-menu-item>
                   <a-menu-item @click="gotoChangePassword"> <EditOutlined /> 修改密码 </a-menu-item>
                   <a-menu-item @click="openGitHub">
-                    <component :is="GiteeOutlined" />
+                    <!--                    <component :is="GiteeOutlined" />-->
+                    <GithubOutlined />
                     项目地址
                   </a-menu-item>
                   <a-menu-item @click="doLogout">
@@ -57,7 +58,13 @@
 </template>
 <script lang="ts" setup>
 import { computed, h, onMounted, onUnmounted, ref } from 'vue'
-import { HomeOutlined, LogoutOutlined, UserOutlined, EditOutlined } from '@ant-design/icons-vue'
+import {
+  HomeOutlined,
+  LogoutOutlined,
+  UserOutlined,
+  EditOutlined,
+  GithubOutlined,
+} from '@ant-design/icons-vue'
 import { type MenuProps, message } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
 import { useLoginUserStore } from '@/stores/useLoginUserStore'

@@ -7,10 +7,10 @@
       :width="300"
       :breakpoints="breakpoints"
     >
-      <template #default="{ item}">
+      <template #default="{ item }">
         <a-card hoverable bordered @click="doClickPicture(item)">
           <template #cover>
-            <div  >
+            <div>
               <LazyImg :url="item.url" />
             </div>
           </template>
@@ -36,7 +36,7 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import {UserOutlined, } from '@ant-design/icons-vue'
+import { UserOutlined } from '@ant-design/icons-vue'
 import { LazyImg, Waterfall } from 'vue-waterfall-plugin-next'
 import 'vue-waterfall-plugin-next/dist/style.css'
 import { ref } from 'vue'
@@ -106,7 +106,6 @@ const doClickPicture = (picture: API.PictureVO) => {
     path: `/picture/${picture.id}`,
   })
 }
-
 </script>
 
 <style scoped>
