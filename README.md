@@ -1,8 +1,9 @@
 # 影智云图库 ShadowWit-Gallery
 
-上线地址：http://121.41.49.251/
+上线地址：http://picture.okokok.cloud/
 
 ## 项目介绍
+
 基于 Vue3+Ant Design Vue+Pinia+Al+WebSocket 的 **图库平台**。
 
 目前已完成功能：

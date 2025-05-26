@@ -49,9 +49,19 @@
 
       <!--      </a-layout-footer>-->
       <a-layout-footer class="footer" :class="{ 'show-footer': isFooterVisible }">
-        <a-button type="link" @click="externalLink('https://github.com/ok954/smart-cloud-gallery')">
-          源码🔗GitHub
-        </a-button>
+        <div class="footer-links">
+          <a href="https://beian.miit.gov.cn/" target="_blank" class="footer-link">
+            <span class="icon"><CopyrightOutlined /></span>
+            浙ICP备2025173364号
+          </a>
+          <a
+            href="https://github.com/ok954/smart-cloud-gallery"
+            target="_blank"
+            class="footer-link"
+          >
+            源码🔗GitHub
+          </a>
+        </div>
         <!--        <a-tooltip placement="top">-->
         <!--          <template #title>GitHub</template>-->
         <!--          <a href="https://github.com/ok954/smart-cloud-gallery" class="social-icon" target="_blank">-->
@@ -67,7 +77,7 @@
 import GlobalHeader from '@/components/GlobalHeader.vue'
 import GlobalSider from '@/components/GlobalSider.vue'
 import { ref } from 'vue'
-import { DownOutlined } from '@ant-design/icons-vue'
+import { DownOutlined, CopyrightOutlined } from '@ant-design/icons-vue'
 import { useRoute } from 'vue-router'
 import { GithubOutlined } from '@ant-design/icons-vue'
 
@@ -178,5 +188,27 @@ const isNotLogin = ref(!['/user/login', '/user/register'].includes(route.path))
   &.show-footer {
     bottom: 0;
   }
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.footer-link,
+.footer-text {
+  display: inline-flex;
+  align-items: center;
+  font-size: 14px;
+  color: #666;
+  transition: all 0.3s;
+}
+
+.footer-link:hover {
+  color: #1890ff;
+  transform: translateY(-1px);
 }
 </style>
