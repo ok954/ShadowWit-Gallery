@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <a-config-provider :locale="locale">
+      <h2 class="title">影智云图库</h2>
       <BasicLayout></BasicLayout>
     </a-config-provider>
   </div>
@@ -15,6 +16,9 @@ dayjs.locale('zh-cn')
 const locale = zhCN
 </script>
 
-<style >
-
+<style scoped>
+.title {
+  position: fixed;
+  opacity: 0;
+}
 </style>

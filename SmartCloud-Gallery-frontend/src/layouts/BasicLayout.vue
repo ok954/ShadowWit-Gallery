@@ -54,11 +54,7 @@
             <span class="icon"><CopyrightOutlined /></span>
             浙ICP备2025173364号
           </a>
-          <a
-            href="https://github.com/ok954/smart-cloud-gallery"
-            target="_blank"
-            class="footer-link"
-          >
+          <a href="https://github.com/ok954/ShadowWit-Gallery" target="_blank" class="footer-link">
             源码🔗GitHub
           </a>
         </div>
