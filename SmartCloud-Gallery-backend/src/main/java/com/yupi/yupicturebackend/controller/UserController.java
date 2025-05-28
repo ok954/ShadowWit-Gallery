@@ -17,6 +17,8 @@ import com.yupi.yupicturebackend.model.entity.User;
 import com.yupi.yupicturebackend.model.vo.LoginUserVO;
 import com.yupi.yupicturebackend.model.vo.UserVO;
 import com.yupi.yupicturebackend.service.UserService;
+import com.yupi.yupicturebackend.utils.JwtUtils;
+import io.jsonwebtoken.Claims;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +26,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.nio.file.Files;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -54,7 +58,17 @@ public class UserController {
         ThrowUtils.throwIf(userLoginRequest == null, ErrorCode.PARAMS_ERROR);
         String userAccount = userLoginRequest.getUserAccount();
         String userPassword = userLoginRequest.getUserPassword();
+
+        // 登录并获取用户信息
         LoginUserVO loginUserVO = userService.userLogin(userAccount, userPassword, request);
+
+        // 生成 JWT Token
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", loginUserVO.getId());  // 将用户 ID 放入 token payload
+        String token = JwtUtils.generateToken(claims);
+
+        // 返回 token 给前端
+        loginUserVO.setToken(token);
         return ResultUtils.success(loginUserVO);
     }
 
@@ -63,10 +77,25 @@ public class UserController {
      */
     @GetMapping("/get/login")
     public BaseResponse<LoginUserVO> getLoginUser(HttpServletRequest request) {
-        User loginUser = userService.getLoginUser(request);
-        return ResultUtils.success(userService.getLoginUserVO(loginUser));
-    }
+        String token = request.getHeader("Authorization");
+        if (token == null || token.isEmpty()) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
+        }
 
+        try {
+            Claims claims = JwtUtils.parseToken(token);
+            Long userId = Long.valueOf(claims.get("userId").toString());
+
+            // 根据 userId 获取用户信息
+            User user = userService.getById(userId);
+            if (user == null) {
+                throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+            }
+            return ResultUtils.success(userService.getLoginUserVO(user));
+        } catch (Exception e) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR, "无效或过期的 Token");
+        }
+    }
     /**
      * 用户注销
      */

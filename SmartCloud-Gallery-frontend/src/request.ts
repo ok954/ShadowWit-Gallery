@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { message } from 'ant-design-vue'
+import { useLoginUserStore } from '@/stores/useLoginUserStore.ts'
 
 // 区分开发和生产环境
 // alert(process.env.NODE_ENV);
@@ -20,6 +21,13 @@ myAxios.interceptors.request.use(
     // 这个接口会显示侧边栏，登录注册页面不需要
     const forbiddenPaths = ['/user/login', '/user/register']
     const currentPath = window.location.pathname
+    const loginUserStore = useLoginUserStore()
+    // console.log('loginUserStore', loginUserStore.loginUser)
+    const token = loginUserStore.loginUser?.token
+    if (token) {
+      // console.log('token', token)
+      config.headers.Authorization = token
+    }
 
     if (forbiddenPaths.includes(currentPath) && config.url?.includes('spaceUser/list/my')) {
       return Promise.reject(new Error('当前页面不允许发送该请求'))

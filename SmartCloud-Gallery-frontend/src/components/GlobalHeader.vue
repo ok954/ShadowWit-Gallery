@@ -178,7 +178,7 @@ const gotoUserInfo = () => {
 
 const openGitHub = () => {
   if (typeof window !== 'undefined') {
-    window.open('https://github.com/ok954/smart-cloud-gallery', '_blank')
+    window.open('https://github.com/ok954/ShadowWit-Gallery', '_blank')
   }
 }
 

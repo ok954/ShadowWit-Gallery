@@ -250,6 +250,7 @@ declare namespace API {
     createTime?: string
     editTime?: string
     id?: number
+    token?: string
     updateTime?: string
     userAccount?: string
     userAvatar?: string

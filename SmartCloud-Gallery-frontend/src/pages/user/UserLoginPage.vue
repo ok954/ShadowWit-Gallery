@@ -50,7 +50,9 @@ const handleSubmit = async (values: any) => {
   try {
     const res = await userLoginUsingPost(values)
     if (res.data.code === 0 && res.data.data) {
+      loginUserStore.setLoginUser(res.data.data)
       await loginUserStore.fetchLoginUser()
+
       message.success('登录成功')
       const redirect = (router.currentRoute.value.query.redirect as string) || '/'
       // console.log(redirect,'redirect')
