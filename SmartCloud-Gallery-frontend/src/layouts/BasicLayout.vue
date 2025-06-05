@@ -100,6 +100,7 @@ const externalLink = (url) => {
 // 控制侧边栏的显示
 // 判断是否不是登录/注册页面
 const route = useRoute()
+// console.log(route.path)
 const isNotLogin = ref(!['/user/login', '/user/register'].includes(route.path))
 </script>
 

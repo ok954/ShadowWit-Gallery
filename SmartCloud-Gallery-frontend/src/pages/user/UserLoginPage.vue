@@ -50,6 +50,7 @@ const handleSubmit = async (values: any) => {
   try {
     const res = await userLoginUsingPost(values)
     if (res.data.code === 0 && res.data.data) {
+      localStorage.setItem('token', res.data.data.token)
       loginUserStore.setLoginUser(res.data.data)
       await loginUserStore.fetchLoginUser()
 

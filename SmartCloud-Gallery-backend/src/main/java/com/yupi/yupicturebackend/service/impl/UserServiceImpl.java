@@ -24,6 +24,8 @@ import com.yupi.yupicturebackend.model.vo.LoginUserVO;
 import com.yupi.yupicturebackend.model.vo.UserVO;
 import com.yupi.yupicturebackend.service.UserService;
 import com.yupi.yupicturebackend.mapper.UserMapper;
+import com.yupi.yupicturebackend.utils.JwtUtils;
+import io.jsonwebtoken.Claims;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -35,10 +37,12 @@ import org.springframework.util.DigestUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
@@ -123,7 +127,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户不存在或者密码错误");
         }
         // 4. 保存用户的登录态
-//        request.getSession().setAttribute(UserConstant.USER_LOGIN_STATE, user);
+        // request.getSession().setAttribute(UserConstant.USER_LOGIN_STATE, user);
         // 记录用户登录态到 Sa-token，便于空间鉴权时使用，注意保证该用户信息与 SpringSession 中的信息过期时间一致
         StpKit.SPACE.login(user.getId());
         StpKit.SPACE.getSession().set(UserConstant.USER_LOGIN_STATE, user);
@@ -148,8 +152,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     /**
      * 重置密码
-     * @param userId       用户ID
-     * @param newPassword  新密码（明文）
+     * 
+     * @param userId      用户ID
+     * @param newPassword 新密码（明文）
      * @return
      */
     @Override
@@ -181,19 +186,58 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     @Override
     public User getLoginUser(HttpServletRequest request) {
-        // 判断是否已经登录
-        Object userObj = request.getSession().getAttribute(UserConstant.USER_LOGIN_STATE);
-        User currentUser = (User) userObj;
-        if (currentUser == null || currentUser.getId() == null) {
-            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
+        String token = request.getHeader("Authorization");
+
+        // 如果请求头中没有token，尝试从请求属性中获取
+        if (StrUtil.isBlank(token)) {
+            token = (String) request.getAttribute("Authorization");
         }
-        // 从数据库中查询（追求性能的话可以注释，直接返回上述结果）
-        Long userId = currentUser.getId();
-        currentUser = this.getById(userId);
-        if (currentUser == null) {
-            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
+
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            log.info("请求头 {}: {}", headerName, request.getHeader(headerName));
         }
-        return currentUser;
+
+        if (StrUtil.isBlank(token)) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR, "缺少 Token");
+        }
+        // 注意：Bearer 后面要加空格！
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+
+        try {
+            // 解析 Token 获取 Claims
+            Claims claims = JwtUtils.parseToken(token);
+            log.info("解析到的 Token：{}", token);
+
+            // ✅ 使用 subject 字段获取用户ID
+            String subject = claims.getSubject();
+            if (StrUtil.isBlank(subject)) {
+                throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR, "Token 中缺少用户信息");
+            }
+
+            Long userId;
+            try {
+                userId = Long.parseLong(subject);
+            } catch (NumberFormatException e) {
+                throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR, "用户ID 格式错误");
+            }
+
+            // 查询数据库获取用户信息
+            User currentUser = this.getById(userId);
+            if (currentUser == null) {
+                throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR, "用户不存在");
+            }
+
+            return currentUser;
+        } catch (io.jsonwebtoken.ExpiredJwtException e) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR, "Token 已过期");
+        } catch (Exception e) {
+            log.error("Token 解析失败", e);
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR, "无效的 Token");
+        }
     }
 
     /**
@@ -380,8 +424,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         User updateUser = new User();
         updateUser.setId(user.getId());
         updateUser.setVipExpireTime(expireTime); // 设置过期时间
-        updateUser.setVipCode(usedVipCode);     // 记录使用的兑换码
-        updateUser.setUserRole(VIP_ROLE);       // 修改用户角色
+        updateUser.setVipCode(usedVipCode); // 记录使用的兑换码
+        updateUser.setUserRole(VIP_ROLE); // 修改用户角色
 
         // 执行更新
         boolean updated = this.updateById(updateUser);
@@ -392,7 +436,3 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     // endregion ------- 以下代码为用户兑换会员功能 --------
 }
-
-
-
-

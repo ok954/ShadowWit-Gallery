@@ -259,9 +259,13 @@ onUnmounted(() => {
 const enterEdit = () => {
   if (websocket) {
     // 发送进入编辑状态的请求
-    websocket.sendMessage({
-      type: PICTURE_EDIT_MESSAGE_TYPE_ENUM.ENTER_EDIT,
-    })
+    try {
+      websocket.sendMessage({
+        type: PICTURE_EDIT_MESSAGE_TYPE_ENUM.ENTER_EDIT,
+      })
+    } catch (e) {
+      message.error('进入编辑状态失败，请稍后再试')
+    }
   }
 }
 

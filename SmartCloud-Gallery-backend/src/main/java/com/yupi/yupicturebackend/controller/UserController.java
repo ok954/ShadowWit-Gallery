@@ -54,7 +54,8 @@ public class UserController {
      * 用户登录
      */
     @PostMapping("/login")
-    public BaseResponse<LoginUserVO> userLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
+    public BaseResponse<LoginUserVO> userLogin(@RequestBody UserLoginRequest userLoginRequest,
+            HttpServletRequest request) {
         ThrowUtils.throwIf(userLoginRequest == null, ErrorCode.PARAMS_ERROR);
         String userAccount = userLoginRequest.getUserAccount();
         String userPassword = userLoginRequest.getUserPassword();
@@ -63,9 +64,7 @@ public class UserController {
         LoginUserVO loginUserVO = userService.userLogin(userAccount, userPassword, request);
 
         // 生成 JWT Token
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("userId", loginUserVO.getId());  // 将用户 ID 放入 token payload
-        String token = JwtUtils.generateToken(claims);
+        String token = JwtUtils.generateToken(loginUserVO.getId().toString());
 
         // 返回 token 给前端
         loginUserVO.setToken(token);
@@ -84,7 +83,12 @@ public class UserController {
 
         try {
             Claims claims = JwtUtils.parseToken(token);
-            Long userId = Long.valueOf(claims.get("userId").toString());
+            // 从subject中获取用户ID
+            String subject = claims.getSubject();
+            if (subject == null) {
+                throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR, "Token中缺少用户信息");
+            }
+            Long userId = Long.valueOf(subject);
 
             // 根据 userId 获取用户信息
             User user = userService.getById(userId);
@@ -96,23 +100,23 @@ public class UserController {
             throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR, "无效或过期的 Token");
         }
     }
+
     /**
      * 用户注销
      */
     @PostMapping("/logout")
     public BaseResponse<Boolean> userLogout(HttpServletRequest request) {
-        ThrowUtils.throwIf(request == null, ErrorCode.PARAMS_ERROR);
-        boolean result = userService.userLogout(request);
-        return ResultUtils.success(result);
+//        ThrowUtils.throwIf(request == null, ErrorCode.PARAMS_ERROR);
+//        boolean result = userService.userLogout(request);
+        return ResultUtils.success(true);
     }
-
 
     /**
      * 修改密码
      */
     @PostMapping("/change/password")
     public BaseResponse<Boolean> changePassword(@RequestBody UserChangePasswordRequest userChangePasswordRequest,
-                                                HttpServletRequest request) {
+            HttpServletRequest request) {
         if (userChangePasswordRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -139,7 +143,6 @@ public class UserController {
 
         return ResultUtils.success(result);
     }
-
 
     /**
      * 重置用户密码（仅管理员）
@@ -170,7 +173,7 @@ public class UserController {
         User user = new User();
         BeanUtil.copyProperties(userAddRequest, user);
         // 默认密码
-        final String DEFAULT_PASSWORD = "12345678";
+        final String DEFAULT_PASSWORD = "123456";
         String encryptPassword = userService.getEncryptPassword(DEFAULT_PASSWORD);
         user.setUserPassword(encryptPassword);
         // 插入数据库
@@ -218,7 +221,7 @@ public class UserController {
      * 更新用户
      */
     @PostMapping("/update")
-//    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    // @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> updateUser(@RequestBody UserUpdateRequest userUpdateRequest) {
         if (userUpdateRequest == null || userUpdateRequest.getId() == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -254,7 +257,7 @@ public class UserController {
      */
     @PostMapping("/exchange/vip")
     public BaseResponse<Boolean> exchangeVip(@RequestBody VipExchangeRequest vipExchangeRequest,
-                                             HttpServletRequest httpServletRequest) {
+            HttpServletRequest httpServletRequest) {
         ThrowUtils.throwIf(vipExchangeRequest == null, ErrorCode.PARAMS_ERROR);
         String vipCode = vipExchangeRequest.getVipCode();
         User loginUser = userService.getLoginUser(httpServletRequest);

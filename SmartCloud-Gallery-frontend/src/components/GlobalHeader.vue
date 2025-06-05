@@ -155,6 +155,8 @@ const doLogout = async () => {
         userName: '未登录',
       })
       message.success('退出登录成功')
+      // 清除本地存储的token
+      localStorage.removeItem('token')
       await router.push({
         path: '/user/login',
         query: {
@@ -162,10 +164,10 @@ const doLogout = async () => {
         },
       })
     } else {
-      message.error('退出登录失败' + res.data.message)
+      message.error('退出登录失败,' + res.data.message)
     }
   } catch (e: any) {
-    message.error('退出登录失败' + e.message)
+    message.error('退出登录失败,' + e.message)
   }
 }
 

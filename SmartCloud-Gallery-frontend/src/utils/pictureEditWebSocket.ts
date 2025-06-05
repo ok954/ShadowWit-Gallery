@@ -13,11 +13,12 @@ export default class PictureEditWebSocket {
    * 初始化 WebSocket 连接
    */
   connect() {
-    const DEV_BASE_URL = "ws://localhost:8123";
+    const DEV_BASE_URL = 'ws://localhost:8123'
     // 线上地址
-    const PROD_BASE_URL = "http://121.41.49.251";
-    const CHOSE_URL = process.env.NODE_ENV === "development" ? DEV_BASE_URL : PROD_BASE_URL;
-    const url = `${CHOSE_URL}/api/ws/picture/edit?pictureId=${this.pictureId}`
+    const PROD_BASE_URL = 'http://121.41.49.251'
+    const CHOSE_URL = process.env.NODE_ENV === 'development' ? DEV_BASE_URL : PROD_BASE_URL
+    const token = localStorage.getItem('token')
+    const url = `${CHOSE_URL}/api/ws/picture/edit?pictureId=${this.pictureId}&token=${token}`
     this.socket = new WebSocket(url)
 
     // 设置携带 cookie

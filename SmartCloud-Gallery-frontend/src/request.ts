@@ -21,12 +21,19 @@ myAxios.interceptors.request.use(
     // 这个接口会显示侧边栏，登录注册页面不需要
     const forbiddenPaths = ['/user/login', '/user/register']
     const currentPath = window.location.pathname
-    const loginUserStore = useLoginUserStore()
-    // console.log('loginUserStore', loginUserStore.loginUser)
-    const token = loginUserStore.loginUser?.token
+    // 优先从localStorage获取token
+    const token = localStorage.getItem('token')
     if (token) {
-      // console.log('token', token)
-      config.headers.Authorization = token
+      // console.log('token from localStorage:', token)
+      config.headers.Authorization = `Bearer ${token}`
+    } else {
+      // 如果localStorage中没有token，再尝试从store中获取
+      const loginUserStore = useLoginUserStore()
+      const storeToken = loginUserStore.loginUser?.token
+      if (storeToken) {
+        console.log('token from store:', storeToken)
+        config.headers.Authorization = `Bearer ${storeToken}`
+      }
     }
 
     if (forbiddenPaths.includes(currentPath) && config.url?.includes('spaceUser/list/my')) {
@@ -62,11 +69,16 @@ myAxios.interceptors.response.use(
         window.location.href = `/user/login`
       }
     }
+
     return response
   },
   function (error) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem('token')
+      window.location.href = '/user/login'
+    }
     return Promise.reject(error)
   },
 )

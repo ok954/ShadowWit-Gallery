@@ -55,27 +55,41 @@ public class WsHandshakeInterceptor implements HandshakeInterceptor {
      * @throws Exception
      */
     @Override
-    public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
+    public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler,
+            Map<String, Object> attributes) throws Exception {
         if (request instanceof ServletServerHttpRequest) {
             HttpServletRequest httpServletRequest = ((ServletServerHttpRequest) request).getServletRequest();
             // 从请求中获取参数
             String pictureId = httpServletRequest.getParameter("pictureId");
+            String token = httpServletRequest.getParameter("token"); // 从URL参数中获取token
+
             if (StrUtil.isBlank(pictureId)) {
                 log.error("缺少图片参数，拒绝握手");
                 return false;
             }
+
+            if (StrUtil.isBlank(token)) {
+                log.error("缺少token，拒绝握手");
+                return false;
+            }
+
+            // 手动添加token到请求头
+            httpServletRequest.setAttribute("Authorization", "Bearer " + token);
+
             // 获取当前登录用户
             User loginUser = userService.getLoginUser(httpServletRequest);
             if (ObjUtil.isEmpty(loginUser)) {
                 log.error("用户未登录，拒绝握手");
                 return false;
             }
+
             // 校验用户是否有编辑当前图片的权限
             Picture picture = pictureService.getById(pictureId);
             if (ObjUtil.isEmpty(picture)) {
                 log.error("图片不存在，拒绝握手");
                 return false;
             }
+
             Long spaceId = picture.getSpaceId();
             Space space = null;
             if (spaceId != null) {
@@ -89,20 +103,23 @@ public class WsHandshakeInterceptor implements HandshakeInterceptor {
                     return false;
                 }
             }
+
             List<String> permissionList = spaceUserAuthManager.getPermissionList(space, loginUser);
             if (!permissionList.contains(SpaceUserPermissionConstant.PICTURE_EDIT)) {
                 log.error("用户没有编辑图片的权限，拒绝握手");
                 return false;
             }
+
             // 设置用户登录信息等属性到 WebSocket 会话中
             attributes.put("user", loginUser);
             attributes.put("userId", loginUser.getId());
-            attributes.put("pictureId", Long.valueOf(pictureId)); // 记得转换为 Long 类型
+            attributes.put("pictureId", Long.valueOf(pictureId));
         }
         return true;
     }
 
     @Override
-    public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Exception exception) {
+    public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler,
+            Exception exception) {
     }
 }
